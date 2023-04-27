@@ -59,6 +59,7 @@ LOG_ERR = 2
 LOG_EXCEPT = 3
 
 DB_PATH = os.path.join(dirpath, 'database.db')
+SQL_PATH = os.path.join(dirpath, 'schema.sql')
 
 #-------<GLOBAL VARIABLES (start with "g")>-------------------------------------
 def gDebugPrint(msg, prt=True, logType=None):

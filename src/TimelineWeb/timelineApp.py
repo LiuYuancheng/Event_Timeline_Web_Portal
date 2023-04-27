@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Name:        monitorApp.py
+# Name:        timelineApp.py
 #
 # Purpose:     The main monitor application to start other module, insert data 
 #              to the score database and update the topology panel in Grafana. 
@@ -7,7 +7,7 @@
 # Author:      Yuancheng Liu
 #
 # Version:     v_0.1
-# Created:     2023/03/15
+# Created:     2023/04/27
 # Copyright:   
 # License:     
 #-----------------------------------------------------------------------------
@@ -28,6 +28,14 @@ PEOPLE_FOLDER = os.path.join('static', 'img')
 app.config['UPLOAD_FOLDER'] = PEOPLE_FOLDER
 
 gv.iDataMgr = dataManager.DataManager(None, fetchMode=False)
+
+
+#-----------------------------------------------------------------------------
+# web home request handling functions.
+@app.route('/')
+def index():
+    Log.info('/index.html is accessed from IP: %s' %str(request.remote_addr))
+    return render_template('index.html')
 
 @app.route('/timeline')
 def show_timeline():

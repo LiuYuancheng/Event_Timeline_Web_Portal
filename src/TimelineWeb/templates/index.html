@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} NCL Servers State Monitor Hub {% endblock %}
+
+{% block style%}
+<style>
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+<iframe src="{{ url_for('show_timeline')}}" width="100%" height="device-height"></iframe>
+{% endblock %}
