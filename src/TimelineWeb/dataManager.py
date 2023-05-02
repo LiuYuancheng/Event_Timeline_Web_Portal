@@ -40,10 +40,11 @@ class DataManager(object):
         self.rawDBhandler.executeQuery(querStr)
         reuslt = self.rawDBhandler.getCursor().fetchall()
         timelintList = []
+        count = 0
         for item in reuslt:
             eventJson = {
                 'title' : "Day%02d:%s" %(item[3], str(item[1])),
-                'tagSide': 'right',
+                'tagSide': 'right' if count %2 == 0 else 'left',
                 'timeStr': item[2],
                 'evtType': item[4],
                 'team':item[5],
@@ -52,4 +53,5 @@ class DataManager(object):
                 'htmlStr': None
             }
             timelintList.append(eventJson)
+            count+=1
         return timelintList

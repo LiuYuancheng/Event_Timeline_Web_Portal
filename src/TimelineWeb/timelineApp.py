@@ -42,6 +42,10 @@ def show_timeline():
     timeLineList = gv.iDataMgr.getTimelineJson()
     return render_template("timeline.html", posts = timeLineList)
 
+@app.route('/bstimeline')
+def show_bstimeline():
+    return render_template("bstimeline.html")
+
 #-----------------------------------------------------------------------------
 # Data post request handling 
 @app.route('/dataPost/<string:uuid>', methods=('POST',))
