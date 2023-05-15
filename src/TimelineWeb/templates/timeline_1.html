@@ -1,0 +1,276 @@
+{% extends 'base.html'%}
+
+{% block style %}
+<style>
+/* Page scrollbar CSS */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
+/* Page timeline CSS */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #1F2226;
+  font-family: Helvetica, sans-serif;
+}
+
+/* Scroll to top button */
+#toTopBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background-color: #555;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+#toTopBtn:hover {
+  background-color: #555;
+}
+
+/* buttons */
+.btn {
+  border: none;
+  color: white;
+  padding: 7px 14px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.success {background-color: #04AA6D;} /* Green */
+.success:hover {background-color: #46a049;}
+
+.info {background-color: #2196F3;} /* Blue */
+.info:hover {background: #0b7dda;}
+
+.warning {background-color: #ff9800;} /* Orange */
+.warning:hover {background: #e68a00;}
+
+.danger {background-color: #f44336;} /* Red */ 
+.danger:hover {background: #da190b;}
+
+.default {background-color: #e7e7e7; color: black;} /* Gray */ 
+.default:hover {background: #ddd;}
+
+
+/* The actual timeline (the vertical ruler) */
+.timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* The actual timeline (the vertical ruler) */
+.timeline::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  background-color: #AFCCDC;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -3px;
+}
+
+/* Container around content */
+.container {
+  padding: 10px 20px;
+  position: relative;
+  background-color: inherit;
+  width: 50%;
+}
+
+/* The circles on the timeline */
+.container::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: -17px;
+  background-color: #AFCCDC;
+  border: 4px solid #FF9F55;
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Place the container to the left */
+.left {
+  left: 0;
+}
+
+/* Place the container to the right */
+.right {
+  left: 50%;
+}
+
+/* Add arrows to the left container (pointing right) */
+.left::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  right: 30px;
+  border: medium solid #AFCCDC;
+  border-width: 10px 0 10px 10px;
+  border-color: transparent transparent transparent #AFCCDC;
+}
+
+/* Add arrows to the right container (pointing left) */
+.right::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  left: 30px;
+  border: medium solid #AFCCDC;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #AFCCDC transparent transparent;
+}
+
+/* Fix the circle for containers on the right side */
+.right::after {
+  left: -16px;
+}
+
+/* The actual content */
+.content {
+  padding: 10px 15px;
+  background-color: white;
+  position: relative;
+  border-radius: 3px;
+}
+
+/* Media queries - Responsive timeline on screens less than 600px wide */
+@media screen and (max-width: 600px) {
+  /* Place the timelime to the left */
+  .timeline::after {
+  left: 31px;
+  }
+  
+  /* Full-width containers */
+  .container {
+  width: 100%;
+  padding-left: 70px;
+  padding-right: 25px;
+  }
+  
+  /* Make sure that all arrows are pointing leftwards */
+  .container::before {
+  left: 60px;
+  border: medium solid #AFCCDC;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #AFCCDC transparent transparent;
+  }
+
+  /* Make sure all circles are at the same spot */
+  .left::after, .right::after {
+  left: 15px;
+  }
+  
+  /* Make all right containers behave like the left ones */
+  .right {
+  left: 0%;
+  }
+
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+  <button onclick="topFunction()" id="toTopBtn" title="Go to top">Scroll To Top</button>
+  <div class="timeline">
+    {% for timeTag in posts %}
+      <div class="container {{timeTag['tagSide']}}">
+          <div class="content">
+              {% if timeTag['evtType'] == 'announce'%}
+                <button class="btn success"> Announcement </button> <b> {{ timeTag['timeStr']}} </b>
+              {% elif timeTag['evtType'] == 'warning' %}
+                <button class="btn warning"> Warning </button> <b> {{ timeTag['timeStr']}} </b>
+              {% elif timeTag['evtType'] == 'alert' %}
+                <button class="btn danger"> Caustion </button> <b> {{ timeTag['timeStr']}} </b>
+              {% else %}
+                <button class="btn info"> Report </button> <b> {{ timeTag['timeStr']}} </b>
+              {% endif %}
+              
+              <p> <b> {{ timeTag['title'] }} </b> </p>
+              
+              {% if timeTag['teamType'] == 0 %}
+                <p> <b> [ {{ timeTag['team'] }} ] </b> {{ timeTag['contents'] }} </p>
+              {% elif timeTag['teamType'] == 1 %}
+                <p style="color:red;"> <b> [ {{ timeTag['team'] }} ] </b> {{ timeTag['contents'] }} </p>
+              {% elif timeTag['teamType'] == 2 %}
+                <p style="color:green;"> <b> [ {{ timeTag['team'] }} ] </b> {{ timeTag['contents'] }} </p>
+              {% else %}
+                <p style="color:blue;"> <b> [ {{ timeTag['team'] }} ] </b> {{ timeTag['contents'] }} </p>
+              {% endif %}
+
+              {% if timeTag['htmlStr'] %} 
+                  {{ timeTag['htmlStr'] | safe }} 
+              {% endif %}
+
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% endblock %}
+
+
+
+
+{% block script %}
+  <script>
+    // Get the button
+    let mybutton = document.getElementById("toTopBtn");
+    
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+    
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+    </script>
+{% endblock %}
+
